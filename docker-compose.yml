@@ -1,6 +1,9 @@
 version: '3.9'
 
 services:
+  # -----------------------------
+  # PHP + Symfony App
+  # -----------------------------
   php:
     build:
       context: .
@@ -12,7 +15,13 @@ services:
       - .env
     depends_on:
       - db
+      - redis
+    networks:
+      - app_network
 
+  # -----------------------------
+  # Nginx
+  # -----------------------------
   nginx:
     image: nginx:1.25-alpine
     container_name: symfony_nginx
@@ -23,7 +32,12 @@ services:
       - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
     depends_on:
       - php
+    networks:
+      - app_network
 
+  # -----------------------------
+  # PostgreSQL Database
+  # -----------------------------
   db:
     image: postgres:16-alpine
     container_name: symfony_postgres
@@ -35,24 +49,49 @@ services:
       - db_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+    networks:
+      - app_network
 
-###> doctrine/doctrine-bundle ###
-  database:
-    image: postgres:${POSTGRES_VERSION:-16}-alpine
-    environment:
-      POSTGRES_DB: ${POSTGRES_DB:-app}
-      # You should definitely change the password in production
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-!ChangeMe!}
-      POSTGRES_USER: ${POSTGRES_USER:-app}
+  # -----------------------------
+  # Redis
+  # -----------------------------
+  redis:
+    image: redis:7-alpine
+    container_name: symfony_redis
+    ports:
+      - "6379:6379"
+    networks:
+      - app_network
+
+  # -----------------------------
+  # Symfony Messenger Worker
+  # -----------------------------
+  messenger:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    container_name: symfony_messenger
+    command: php bin/console messenger:consume async -vv
     volumes:
-      - database_data:/var/lib/postgresql/data:rw
-      # You may use a bind-mounted host directory instead, so that it is harder to accidentally remove the volume and lose all your data!
-      # - ./docker/db/data:/var/lib/postgresql/data:rw
-###< doctrine/doctrine-bundle ###
+      - .:/var/www/html
+    env_file:
+      - .env
+    depends_on:
+      - php
+      - db
+      - redis
+    networks:
+      - app_network
 
+# -----------------------------
+# Volumes
+# -----------------------------
 volumes:
   db_data:
 
-###> doctrine/doctrine-bundle ###
-  database_data:
-###< doctrine/doctrine-bundle ###
+# -----------------------------
+# Networks
+# -----------------------------
+networks:
+  app_network:
+    driver: bridge
