@@ -19,6 +19,11 @@ services:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
+            - '../src/Infrastructure/Migrations/'
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+    App\Infrastructure\Api\GNewsHttpClient:
+        arguments:
+            $apiKey: '%env(GNEWS_API_KEY)%'

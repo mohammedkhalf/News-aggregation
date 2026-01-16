@@ -5,7 +5,10 @@ namespace App\Application\Handler;
 use App\Application\Command\SyncNewsCommand;
 use App\Domain\Article\Repository\ArticleRepositoryInterface;
 use App\Infrastructure\Api\GNewsHttpClient;
+use App\Domain\Article\Article;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
+#[AsMessageHandler]
 class SyncNewsHandler
 {
     public function __construct(
@@ -18,7 +21,7 @@ class SyncNewsHandler
         foreach ($this->client->fetch($command) as $dto) {
             $article = $this->repository->findByExternalId($dto['externalId']);
             if (!$article) {
-                $article = \App\Domain\Article\Article::createFromDto($dto);
+                $article = Article::createFromDto($dto);
                 $this->repository->upsert($article);
             } else {
                 $article->updateContent($dto);
