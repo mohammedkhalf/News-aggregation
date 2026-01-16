@@ -53,6 +53,9 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/doctrine/inflector" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/doctrine/lexer" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/doctrine/collections" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/messenger" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/clock" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/psr/clock" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
