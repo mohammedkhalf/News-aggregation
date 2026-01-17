@@ -3,7 +3,7 @@
 namespace App\UI\Controller;
 
 use App\UI\DTO\SyncNewsRequest;
-use App\Application\Command\SyncNewsCommand;
+use App\Application\Command\AsyncNewsCommand;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -11,10 +11,10 @@ use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 
-class SyncNewsController extends AbstractController
+class AsyncNewsController extends AbstractController
 {
     public function __construct(private MessageBusInterface $bus, private SerializerInterface $serializer){}
-    #[Route('/api/sync-news', name: 'api_sync_news', methods: ['POST'])]
+    #[Route('/api/async-news', name: 'api_async_news', methods: ['POST'])]
     public function __invoke(Request $request): Response
     {
         /** @var SyncNewsRequest $data */
@@ -26,7 +26,7 @@ class SyncNewsController extends AbstractController
 
         // Dispatch async message
         $this->bus->dispatch(
-            new SyncNewsCommand(
+            new AsyncNewsCommand(
                 keyword: $data->keyword,
                 language: $data->language,
                 fromDate: $data->from,

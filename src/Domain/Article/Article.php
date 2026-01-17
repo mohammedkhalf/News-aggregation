@@ -19,7 +19,7 @@ class Article
     #[ORM\Column(name: 'external_id', type: 'text', unique: true)]
     private string $externalId;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: 'text')]
     private string $title;
 
     #[ORM\Column(type: 'text', nullable: true)]
@@ -28,13 +28,13 @@ class Article
     #[ORM\Column(type: 'text', nullable: true)]
     private ?string $content;
 
-    #[ORM\Column(name: 'source_name', type: 'string', length: 255)]
+    #[ORM\Column(name: 'source_name', type: 'text')]
     private string $sourceName;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: 'text')]
     private string $url;
 
-    #[ORM\Column(name: 'image_url', type: 'string', length: 255, nullable: true)]
+    #[ORM\Column(name: 'image_url', type: 'text', nullable: true)]
     private ?string $imageUrl;
 
     #[ORM\Column(type: 'string', length: 2)]

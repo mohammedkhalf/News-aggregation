@@ -2,7 +2,7 @@
 
 namespace App\UI\Console;
 
-use App\Application\Command\SyncNewsCommand;
+use App\Application\Command\AsyncNewsCommand;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -11,10 +11,10 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 
 #[AsCommand(
-    name: 'app:sync-news',
+    name: 'app:async-news',
     description: 'Dispatch async GNews synchronization'
 )]
-final class SyncNewsConsoleCommand extends Command
+final class AsyncNewsConsoleCommand extends Command
 {
     public function __construct(
         private readonly MessageBusInterface $bus
@@ -34,7 +34,7 @@ final class SyncNewsConsoleCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->bus->dispatch(
-            new SyncNewsCommand(
+            new AsyncNewsCommand(
                 keyword: $input->getOption('keyword'),
                 language: $input->getOption('language'),
                 fromDate: $input->getOption('from'),

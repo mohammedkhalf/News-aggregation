@@ -2,14 +2,14 @@
 
 namespace App\Infrastructure\Api;
 
-use App\Application\Command\SyncNewsCommand;
+use App\Application\Command\AsyncNewsCommand;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class GNewsHttpClient
 {
     public function __construct(private HttpClientInterface $client, private string $apiKey) {}
     
-    public function fetch(SyncNewsCommand $command): iterable
+    public function fetch(AsyncNewsCommand $command): iterable
     {
         $page = 1;
         do {
