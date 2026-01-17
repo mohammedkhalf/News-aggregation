@@ -28,7 +28,7 @@ class SyncNewsDirectController extends AbstractController
         );
 
         try {
-            // Sync directly (synchronous, no Messenger/Redis)
+            // Sync directly
             $result = $this->syncService->sync(
                 keyword: $data->keyword ?? '',
                 language: $data->language ?? 'en',

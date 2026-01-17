@@ -16,7 +16,7 @@ class Article
     #[ORM\Column(type: 'guid')]
     private string $id;
 
-    #[ORM\Column(name: 'external_id', type: 'string', length: 255, unique: true)]
+    #[ORM\Column(name: 'external_id', type: 'text', unique: true)]
     private string $externalId;
 
     #[ORM\Column(type: 'string', length: 255)]

@@ -23,7 +23,7 @@ final class Version20260114001807 extends AbstractMigration
         $this->addSql('
             CREATE TABLE articles (
                 id UUID NOT NULL,
-                external_id VARCHAR(64) NOT NULL,
+                external_id VARCHAR(255) NOT NULL,
                 title VARCHAR(255) NOT NULL,
                 description TEXT NOT NULL,
                 content TEXT NOT NULL,

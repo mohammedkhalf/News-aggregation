@@ -55,7 +55,7 @@ class SyncNewsService
             }
         } catch (\Exception $e) {
             $errors[] = [
-                'externalId' => 'general',
+                'externalId' => 'general Exception',
                 'error' => $e->getMessage(),
             ];
         }

@@ -8,10 +8,7 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 class GNewsHttpClient
 {
     public function __construct(private HttpClientInterface $client, private string $apiKey) {}
-
-    /**
-     * @param SyncNewsCommand|object{keyword: string, language: string, fromDate: string, toDate: string} $command
-     */
+    
     public function fetch(SyncNewsCommand $command): iterable
     {
         $page = 1;
