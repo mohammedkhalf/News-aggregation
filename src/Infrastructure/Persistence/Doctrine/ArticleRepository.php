@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Infrastructure\Persistence\Doctrine;
 
 use App\Domain\Article\Article;
@@ -9,7 +11,10 @@ use Doctrine\ORM\QueryBuilder;
 
 class ArticleRepository implements ArticleRepositoryInterface
 {
-    public function __construct(private EntityManagerInterface $em) {}
+    public function __construct(
+        private readonly EntityManagerInterface $em
+    ) {
+    }
 
     public function findByExternalId(string $externalId): ?Article
     {
@@ -30,11 +35,14 @@ class ArticleRepository implements ArticleRepositoryInterface
     }
 
 
+    /**
+     * @param array{language?: string, source?: string, sortBy?: string, sortOrder?: string} $filters
+     * @return array<int, Article>
+     */
     public function findAllWithFilters(array $filters, int $limit, int $offset): array
     {
         $qb = $this->createQueryBuilder($filters);
 
-        //sort
         $sortBy = $filters['sortBy'] ?? 'publishedAt';
         $sortOrder = $filters['sortOrder'] ?? 'DESC';
 
@@ -47,22 +55,30 @@ class ArticleRepository implements ArticleRepositoryInterface
         $sortColumn = $sortColumnMap[$sortBy] ?? 'a.publishedAt';
         $qb->orderBy($sortColumn, $sortOrder);
 
-        // Pagination
         $qb->setMaxResults($limit)
             ->setFirstResult($offset);
 
-        return $qb->getQuery()->getResult();
+        $result = $qb->getQuery()->getResult();
+
+        return is_array($result) ? $result : [];
     }
 
+    /**
+     * @param array{language?: string, source?: string} $filters
+     */
     public function countWithFilters(array $filters): int
     {
         $qb = $this->createQueryBuilder($filters);
         $qb->select('COUNT(a.id)');
 
-        return (int) $qb->getQuery()->getSingleScalarResult();
+        $result = $qb->getQuery()->getSingleScalarResult();
+
+        return (int) $result;
     }
 
-
+    /**
+     * @param array{language?: string, source?: string} $filters
+     */
     private function createQueryBuilder(array $filters): QueryBuilder
     {
         $qb = $this->em->createQueryBuilder()

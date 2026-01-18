@@ -1,0 +1,30 @@
+parameters:
+    level: 7
+    paths:
+        - src
+    excludePaths:
+        - src/Infrastructure/Migrations/*
+    checkMissingIterableValueType: true
+    checkGenericClassInNonGenericObjectType: true
+    checkUninitializedProperties: true
+    checkPhpDocMethodSignatures: true
+    checkPhpDocMissingReturn: true
+    checkPhpDocMissingParam: true
+    checkMissingVarDocTypehintRule: true
+    checkTooWideReturnTypesInProtectedAndPublicMethods: true
+    checkUnusedFunctionParameters: true
+    checkUnusedVariables: true
+    checkUnusedPrivateProperties: true
+    checkUnusedPrivateMethods: true
+    checkExplicitMixedMissingReturn: true
+    checkMissingClosureNativeReturnTypehintRule: true
+    checkMissingClosureNativeParameterTypehintRule: true
+    checkTooWideParameterTypesInProtectedAndPublicMethods: true
+    checkMissingCallableSignature: true
+    checkMissingCallableNativeReturnTypehintRule: true
+    checkMissingCallableNativeParameterTypehintRule: true
+
+includes:
+    - vendor/phpstan/phpstan-doctrine/extension.neon
+    - vendor/phpstan/phpstan-symfony/extension.neon
+

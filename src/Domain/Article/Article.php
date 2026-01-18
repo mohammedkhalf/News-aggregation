@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Domain\Article;
 
 use App\Domain\Article\ValueObject\Language;
@@ -139,6 +141,9 @@ class Article
         return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
     }
 
+    /**
+     * @param array{externalId: string, title: string, description?: string|null, content?: string|null, source: string, url: string, imageUrl?: string|null, language: string, publishedAt: string} $dto
+     */
     public static function createFromDto(array $dto): self
     {
         return new self(
@@ -154,6 +159,9 @@ class Article
         );
     }
 
+    /**
+     * @param array{title: string, description?: string|null, content?: string|null} $dto
+     */
     public function updateContent(array $dto): void
     {
         $this->title = $dto['title'];

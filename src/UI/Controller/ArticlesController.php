@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\UI\Controller;
 
+use App\Domain\Article\Article;
 use App\Domain\Article\Repository\ArticleRepositoryInterface;
 use App\UI\DTO\ArticleListRequest;
 use App\UI\DTO\ArticleListResponse;
@@ -14,9 +17,13 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ArticlesController extends AbstractController
 {
+    private const ALLOWED_SORT_FIELDS = ['publishedAt', 'createdAt', 'title'];
+    private const UUID_PATTERN = '/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i';
+
     public function __construct(
-        private ArticleRepositoryInterface $repository
-    ) {}
+        private readonly ArticleRepositoryInterface $repository
+    ) {
+    }
 
     #[Route('/api/articles', name: 'api_articles_list', methods: ['GET'])]
     public function list(Request $request): JsonResponse
@@ -25,11 +32,9 @@ class ArticlesController extends AbstractController
             // Parse query parameters
             $listRequest = ArticleListRequest::fromRequest($request->query->all());
 
-            // Validate sortBy
-            $allowedSortFields = ['publishedAt', 'createdAt', 'title'];
-            if (!in_array($listRequest->sortBy, $allowedSortFields)) {
+            if (!in_array($listRequest->sortBy, self::ALLOWED_SORT_FIELDS, true)) {
                 return $this->json([
-                    'error' => 'Invalid sortBy parameter. Allowed values: ' . implode(', ', $allowedSortFields),
+                    'error' => 'Invalid sortBy parameter. Allowed values: ' . implode(', ', self::ALLOWED_SORT_FIELDS),
                 ], Response::HTTP_BAD_REQUEST);
             }
 
@@ -41,8 +46,7 @@ class ArticlesController extends AbstractController
                 'sortOrder' => $listRequest->sortOrder,
             ];
 
-            // Remove null filters
-            $filters = array_filter($filters, fn($value) => $value !== null);
+            $filters = array_filter($filters, static fn($value): bool => $value !== null);
 
             // Fetch articles
             $articles = $this->repository->findAllWithFilters(
@@ -54,9 +58,8 @@ class ArticlesController extends AbstractController
             // Get total count
             $total = $this->repository->countWithFilters($filters);
 
-            // Convert to DTOs
             $articleResponses = array_map(
-                fn($article) => ArticleResponse::fromArticle($article)->toArray(),
+                static fn(Article $article): array => ArticleResponse::fromArticle($article)->toArray(),
                 $articles
             );
 
@@ -86,8 +89,7 @@ class ArticlesController extends AbstractController
     public function get(string $id): JsonResponse
     {
         try {
-            // Validate UUID format
-            if (!preg_match('/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i', $id)) {
+            if (!preg_match(self::UUID_PATTERN, $id)) {
                 return $this->json([
                     'error' => 'Invalid article ID format',
                 ], Response::HTTP_BAD_REQUEST);
@@ -95,7 +97,7 @@ class ArticlesController extends AbstractController
 
             $article = $this->repository->findById($id);
 
-            if (!$article) {
+            if ($article === null) {
                 return $this->json([
                     'error' => 'Article not found',
                 ], Response::HTTP_NOT_FOUND);

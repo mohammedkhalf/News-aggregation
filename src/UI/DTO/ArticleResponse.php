@@ -1,9 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\UI\DTO;
 
 use App\Domain\Article\Article;
 
+/**
+ * Response DTO for article data
+ */
 class ArticleResponse
 {
     public function __construct(
@@ -19,7 +24,8 @@ class ArticleResponse
         public readonly string $publishedAt,
         public readonly string $createdAt,
         public readonly string $updatedAt,
-    ) {}
+    ) {
+    }
 
     public static function fromArticle(Article $article): self
     {
@@ -39,6 +45,9 @@ class ArticleResponse
         );
     }
 
+    /**
+     * @return array<string, string|null>
+     */
     public function toArray(): array
     {
         return [
