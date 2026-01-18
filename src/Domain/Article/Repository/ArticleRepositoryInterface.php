@@ -11,4 +11,11 @@ interface ArticleRepositoryInterface
 
     public function upsert(Article $article): void;
 
+    public function findById(string $id): ?Article;
+
+    public function findAllWithFilters(array $filters, int $limit, int $offset): array;
+
+    public function countWithFilters(array $filters): int;
+
+
 }

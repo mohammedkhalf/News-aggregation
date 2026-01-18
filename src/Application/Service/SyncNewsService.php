@@ -2,7 +2,7 @@
 
 namespace App\Application\Service;
 
-use App\Application\Command\SyncNewsCommand;
+use App\Application\Command\AsyncNewsCommand;
 use App\Domain\Article\Repository\ArticleRepositoryInterface;
 use App\Infrastructure\Api\GNewsHttpClient;
 use App\Domain\Article\Article;
@@ -26,7 +26,7 @@ class SyncNewsService
 
         try {
             // Create a command object for the client
-            $command = new SyncNewsCommand(
+            $command = new AsyncNewsCommand(
                 keyword: $keyword,
                 language: $language,
                 fromDate: $fromDate,
