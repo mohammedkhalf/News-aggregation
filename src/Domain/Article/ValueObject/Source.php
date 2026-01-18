@@ -8,6 +8,11 @@ class Source
 
     public function __construct(string $name)
     {
+        $name = trim($name);
+        if ($name === '') {
+            throw new \InvalidArgumentException('Source name cannot be empty');
+        }
+
         $this->name = $name;
     }
 
