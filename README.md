@@ -39,6 +39,14 @@ The system is organized into four main layers following DDD principles:
 - Ensure idempotency.
 - Symfony Console Command
 - secured API endpoint
+- Get Articles Locally 
+- Get Article By Id
 
 ### Installtion
 
+- **Run Containers**: docker compose up
+- **Run Migrations**: docker compose exec php php bin/console doctrine:migrations:migrate 
+- **Sync Using Command Line**: `podman compose exec php php bin/console app:async-news \
+  --keyword=technology \
+  --language=en
+  `
