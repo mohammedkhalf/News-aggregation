@@ -43,6 +43,15 @@ The system is organized into four main layers following DDD principles:
 - Get Article By ID
 - phpstan for Code Quality & Static Analysis
 
+### Environment Variables
+
+- Vars are :
+  - Database Url
+  - GNEWS_API_KEY
+  - REDIS_URL
+  - MESSENGER_TRANSPORT_DSN
+
+
 ### Installtion
 
 - **Run Docker Containers**: `docker compose up`
